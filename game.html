@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Library - Premium Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 160px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .card-image span {
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .card-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .card-specs {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.4);
+            background: linear-gradient(45deg, #00cc6a, #00ff88);
+        }
+
+        .torrent-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff5252);
+        }
+
+        .torrent-btn:hover {
+            background: linear-gradient(45deg, #ff5252, #ff6b6b);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
+
+        .floating-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ff88;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="header">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="🔍 Search your premium collection..." id="searchBox">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalItems">247</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalSize">1.2TB</div>
+                <div class="stat-label">Total Size</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="activeMembers">1,547</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+        </div>
+
+        <div class="grid" id="contentGrid">
+            <!-- Content will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const contentData = [
+            {
+                title: "Cyberpunk Chronicles 2025",
+                subtitle: "Sci-Fi Action RPG",
+                size: "45.2GB",
+                quality: "4K Ultra",
+                specs: "DirectX 12 | Ray Tracing | 60fps",
+                type: "game",
+                premium: true
+            },
+            {
+                title: "Ocean's Heist",
+                subtitle: "Crime Thriller Movie",
+                size: "8.4GB",
+                quality: "4K HDR",
+                specs: "Dolby Atmos | Subtitles | Director's Cut",
+                type: "movie"
+            },
+            {
+                title: "Mystic Realms Online",
+                subtitle: "MMORPG Adventure",
+                size: "32.1GB",
+                quality: "HD",
+                specs: "Multiplayer | Cross-platform | Anti-cheat",
+                type: "game"
+            },
+            {
+                title: "The Last Frontier",
+                subtitle: "Documentary Series",
+                size: "12.7GB",
+                quality: "4K",
+                specs: "8 Episodes | Multiple Languages",
+                type: "series",
+                premium: true
+            },
+            {
+                title: "Quantum Physics Pro",
+                subtitle: "Educational Software",
+                size: "2.3GB",
+                quality: "Premium",
+                specs: "Interactive | 3D Models | Simulations",
+                type: "software"
+            },
+            {
+                title: "Neon Nights Racing",
+                subtitle: "Street Racing Game",
+                size: "28.9GB",
+                quality: "Ultra HD",
+                specs: "120fps | VR Support | Online Mode",
+                type: "game",
+                premium: true
+            },
+            {
+                title: "Digital Art Masterclass",
+                subtitle: "Creative Course Bundle",
+                size: "15.6GB",
+                quality: "HD",
+                specs: "50+ Hours | PSD Files | Brushes Pack",
+                type: "course"
+            },
+            {
+                title: "Space Opera Chronicles",
+                subtitle: "Movie Collection",
+                size: "67.3GB",
+                quality: "4K Remux",
+                specs: "Trilogy | Bonus Content | Commentary",
+                type: "collection",
+                premium: true
+            }
+        ];
+
+        function createCard(item, index) {
+            const isTorrent = Math.random() > 0.7;
+            const downloadText = isTorrent ? "Torrent Download" : "Download";
+            const btnClass = isTorrent ? "torrent-btn" : "";
+            
+            return `
+                <div class="card" data-type="${item.type}">
+                    ${item.premium ? '<div class="premium-badge">Premium</div>' : ''}
+                    <div class="card-image">
+                        <span>${getIconForType(item.type)}</span>
+                    </div>
+                    <div class="card-title">${item.title}</div>
+                    <div class="card-subtitle">${item.subtitle}</div>
+                    <div class="card-specs">
+                        ${item.quality} • ${item.size}<br>
+                        ${item.specs}
+                    </div>
+                    <button class="download-btn ${btnClass}" onclick="handleDownload('${item.title}')">${downloadText}</button>
+                </div>
+            `;
+        }
+
+        function getIconForType(type) {
+            const icons = {
+                game: "🎮",
+                movie: "🎬",
+                series: "📺",
+                software: "💻",
+                course: "📚",
+                collection: "📦"
+            };
+            return icons[type] || "📁";
+        }
+
+        function handleDownload(title) {
+            // Simulate download with animation
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            btn.textContent = "Downloading...";
+            btn.style.background = "linear-gradient(45deg, #ff9800, #f57c00)";
+            
+            setTimeout(() => {
+                btn.textContent = "✓ Downloaded";
+                btn.style.background = "linear-gradient(45deg, #4caf50, #388e3c)";
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = "";
+                }, 2000);
+            }, 1500);
+        }
+
+        function renderContent() {
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = contentData.map((item, index) => createCard(item, index)).join('');
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 8000);
+            }, 500);
+        }
+
+        function animateStats() {
+            const stats = [
+                { id: 'totalItems', target: 247 },
+                { id: 'totalSize', target: 1.2, suffix: 'TB' },
+                { id: 'activeMembers', target: 1547 }
+            ];
+            
+            stats.forEach(stat => {
+                const element = document.getElementById(stat.id);
+                let current = 0;
+                const increment = stat.target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= stat.target) {
+                        current = stat.target;
+                        clearInterval(timer);
+                    }
+                    
+                    if (stat.suffix) {
+                        element.textContent = current.toFixed(1) + stat.suffix;
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 50);
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const subtitle = card.querySelector('.card-subtitle').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderContent();
+            createParticles();
+            animateStats();
+        });
+    </script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</body>
+</html>
